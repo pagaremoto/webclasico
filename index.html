@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de LEDs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        button {
+            font-size: 18px;
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Control de LEDs</h1>
+    <button onclick="controlarLED('enciende')">Encender LEDs</button>
+    <button onclick="controlarLED('apaga')">Apagar LEDs</button>
+    <button onclick="consultarEstado()">Consultar Estado</button>
+    <p id="estado">Estado: Desconocido</p>
+
+    <script>
+        const ESP_IP = "http://192.168.1.41:8081";
+        
+        function controlarLED(accion) {
+            fetch(`${ESP_IP}/${accion}`)
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                    consultarEstado();
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        
+        function consultarEstado() {
+            fetch(`${ESP_IP}/estado`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("estado").innerText = data;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
